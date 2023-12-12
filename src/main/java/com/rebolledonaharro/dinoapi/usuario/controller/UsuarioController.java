@@ -1,5 +1,6 @@
 package com.rebolledonaharro.dinoapi.usuario.controller;
 
+import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.jwt.access.JwtProvider;
 import com.rebolledonaharro.dinoapi.usuario.dto.CreatePersonRequest;
 import com.rebolledonaharro.dinoapi.usuario.dto.JwtUserResponse;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +41,7 @@ public class UsuarioController {
     private final AuthenticationManager authManager;
     private final UserService userService;
     private final AdminService adminService;
+    private final BlackListService blackListService;
 
 
     @ApiResponses(value = {
@@ -131,5 +135,30 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(JwtUserResponse.of(person, token));
     }
+
+    @PostMapping("/userLogout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String token = extractTokenFromRequest(request);
+        blackListService.addToBlackList(token);
+
+        // Clear any session-related data if necessary
+
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
+    public String extractTokenFromRequest(HttpServletRequest request) {
+        // Get the Authorization header from the request
+        String authorizationHeader = request.getHeader("Authorization");
+
+        // Check if the Authorization header is not null and starts with "Bearer "
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            // Extract the JWT token (remove "Bearer " prefix)
+            return authorizationHeader.substring(7);
+        }
+
+        // If the Authorization header is not valid, return null
+        return null;
+    }
+
 
 }

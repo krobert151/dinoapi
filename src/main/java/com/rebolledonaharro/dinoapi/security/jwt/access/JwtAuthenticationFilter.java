@@ -1,5 +1,6 @@
 package com.rebolledonaharro.dinoapi.security.jwt.access;
 
+import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.errorhandling.JwtTokenException;
 import com.rebolledonaharro.dinoapi.usuario.model.Person;
 import com.rebolledonaharro.dinoapi.usuario.service.PersonService;
@@ -33,6 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     @Autowired
+    private BlackListService blackListService;
+
+    @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
 
@@ -43,30 +47,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getJwtTokenFromRequest(request);
 
         try {
-            if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
-                UUID userId = jwtProvider.getUserIdFromJwtToken(token);
+            if (!blackListService.isBlacklisted(token)) {
 
-                Optional<Person> result = personService.findById(userId);
+                if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
+                    UUID userId = jwtProvider.getUserIdFromJwtToken(token);
 
-                if (result.isPresent()) {
-                    Person user = result.get();
+                    Optional<Person> result = personService.findById(userId);
 
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    user,
-                                    null,
-                                    user.getAuthorities()
-                            );
+                    if (result.isPresent()) {
+                        Person user = result.get();
 
-                    authentication.setDetails(new WebAuthenticationDetails(request));
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(
+                                        user,
+                                        null,
+                                        user.getAuthorities()
+                                );
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                        authentication.setDetails(new WebAuthenticationDetails(request));
+
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+
                 }
 
+                filterChain.doFilter(request, response);
+            }else {
+                // Token is blacklisted or expired, deny access
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
-
-            filterChain.doFilter(request, response);
-
         } catch (JwtTokenException ex) {
             log.info("Authentication error using token JWT: " + ex.getMessage());
             resolver.resolveException(request, response, null, ex);
