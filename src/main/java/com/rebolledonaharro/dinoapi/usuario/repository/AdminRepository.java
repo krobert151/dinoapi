@@ -7,4 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 public interface AdminRepository extends JpaRepository<Admin, UUID> {
+
+    boolean existsByUsernameIgnoreCase(String username);
+
+
 }

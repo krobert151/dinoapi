@@ -1,6 +1,7 @@
 package com.rebolledonaharro.dinoapi.security.errorhandling;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rebolledonaharro.dinoapi.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,28 +52,7 @@ public class TokenControllerAdvice  {
                 ));
     }
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @Builder
-    public static class ErrorMessage {
 
-        private HttpStatus status;
-        private String message, path;
-
-        @Builder.Default
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
-        private LocalDateTime dateTime = LocalDateTime.now();
-
-        public static ErrorMessage of (HttpStatus status, String message, String path) {
-            return ErrorMessage.builder()
-                    .status(status)
-                    .message(message)
-                    .path(path)
-                    .build();
-        }
-
-    }
 
 
 }

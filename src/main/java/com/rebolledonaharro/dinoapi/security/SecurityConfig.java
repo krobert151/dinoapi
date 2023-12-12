@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -79,30 +80,15 @@ public class SecurityConfig {
 
         http
                 .cors(Customizer.withDefaults())
-                //.csrf().disable()
                 .csrf((csrf)-> csrf
                         .ignoringRequestMatchers(antMatcher("/**")))
-                /*
-                        .exceptionHandling()
-                                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                                .accessDeniedHandler(jwtAccessDeniedHandler)*/
+
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-                /*
-                        .and()
-                                .sessionManagement()
-                                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                */
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                /*
-                        .and()
-                                .authorizeRequests()
-                                .antMatchers("/note/**").hasRole("USER")
-                                .antMatchers("/auth/register/admin").hasRole("ADMIN")
-                                .anyRequest().authenticated();*/
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(antMatcher("/user/**")).hasRole("USER")
                         .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
@@ -113,7 +99,6 @@ public class SecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
-        //http.headers().frameOptions().disable();
         http.headers((headers) -> headers
                 .frameOptions(opt -> opt.disable()));
 
