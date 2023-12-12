@@ -10,6 +10,8 @@ public interface PersonRepository extends JpaRepository<Person, UUID> {
 
     boolean existsByUsernameIgnoreCase(String username);
 
+
+
     Optional<Person> findFirstByUsername(String username);
 
 }
