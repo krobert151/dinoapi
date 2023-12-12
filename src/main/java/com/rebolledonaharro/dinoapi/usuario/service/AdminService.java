@@ -23,6 +23,7 @@ public class AdminService {
     private final AdminRepository repository;
     private final PasswordEncoder passwordEncoder;
 
+
     public Admin createUser(CreatePersonRequest createPersonRequest, EnumSet<PersonRole> roles){
         if (repository.existsByUsernameIgnoreCase(createPersonRequest.username()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"El email del usuario ya ha sido registrado");

@@ -10,6 +10,13 @@ import com.rebolledonaharro.dinoapi.usuario.model.Person;
 import com.rebolledonaharro.dinoapi.usuario.model.User;
 import com.rebolledonaharro.dinoapi.usuario.service.AdminService;
 import com.rebolledonaharro.dinoapi.usuario.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,12 +39,55 @@ public class UsuarioController {
     private final UserService userService;
     private final AdminService adminService;
 
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Register as user", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PersonResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                 "id": "c0a83801-8c5f-132e-818c-5f94162a0000",
+                                                 "username": "manolo34",
+                                                 "fullName": "Manolo Manolez",
+                                                 "roles": [
+                                                     "USER"
+                                                 ],
+                                                 "createdAt": "12/12/2023 20:49:49"
+                                             }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "400", description = "Introduced data not valid", content = @Content)
+    })
+    @Operation(summary = "createPersonWithUserRole", description = "Register as user")
     @PostMapping("/auth/register")
     public ResponseEntity<PersonResponse> createPersonWithUserRole(@Valid @RequestBody CreatePersonRequest createPersonRequest){
         User user = userService.createPersonWithUserRole(createPersonRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(PersonResponse.fromUser(user));
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Register as admin", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PersonResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                  "id": "c0a83801-8c5f-132e-818c-5f9480320001",
+                                                  "username": "manolo67",
+                                                  "fullName": "Manolo Manolez",
+                                                  "roles": [
+                                                      "ADMIN"
+                                                  ],
+                                                  "createdAt": "12/12/2023 20:50:16"
+                                            }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "400", description = "Introduced data not valid", content = @Content)
+    })
+    @Operation(summary = "createPersonWithAdminRole", description = "Register as admin")
     @PostMapping("/admin/register")
     public ResponseEntity<PersonResponse> createPersonWithAdminRole(@Valid @RequestBody CreatePersonRequest createPersonRequest, @AuthenticationPrincipal Person person){
         Admin admin = adminService.createPersonWithAdminRole(createPersonRequest, person);
@@ -45,6 +95,27 @@ public class UsuarioController {
     }
 
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "log in", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PersonResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                 "id": "80d768ef-831a-4cfe-94e6-fda1eb4452a6",
+                                                 "username": "rducker0",
+                                                 "fullName": "Rikki Ducker",
+                                                 "roles": [
+                                                     "ADMIN"
+                                                 ],
+                                                 "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4MGQ3NjhlZi04MzFhLTRjZmUtOTRlNi1mZGExZWI0NDUyYTYiLCJpYXQiOjE3MDI0MTA2MDEsImV4cCI6MTcwMjQ5NzAwMX0.A0nmPr3mI_QiJiN-kld8qFzegDybOVtqYDYh_TwRigarVi1PK9wMraEcwQcSRHRM"
+                                             }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "400", description = "Introduced data not valid", content = @Content)
+    })
+    @Operation(summary = "login", description = "log in")
     @PostMapping("/auth/login")
     public ResponseEntity<JwtUserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication =
