@@ -1,16 +1,25 @@
 package com.rebolledonaharro.dinoapi.security.jwt.access;
 
+import com.rebolledonaharro.dinoapi.security.blacklist.BlackListRepository;
+import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
+import com.rebolledonaharro.dinoapi.security.errorhandling.BlackListTokenException;
 import com.rebolledonaharro.dinoapi.security.errorhandling.JwtTokenException;
 import com.rebolledonaharro.dinoapi.usuario.model.Person;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import javax.crypto.SecretKey;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -31,9 +40,14 @@ public class JwtProvider {
     private int jwtLifeInDays;
     //private int jwtLifeInMinutes;
 
+    @Autowired
+    private BlackListService blackListService;
+
     private JwtParser jwtParser;
 
     private SecretKey secretKey;
+
+
 
     @PostConstruct
     public void init() {
@@ -96,17 +110,36 @@ public class JwtProvider {
     }
 
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token) throws BlackListTokenException {
 
         try {
             //jwtParser.parseClaimsJws(token);
             jwtParser.parse(token);
+
+            blackListService.isBlacklisted(token);
             return true;
         } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             log.info("Error con el token: " + ex.getMessage());
             throw new JwtTokenException(ex.getMessage());
         }
         //return false;
+
+    }
+
+    @Scheduled(cron = "0 0 12")
+    public void removeExpiratedToken(){
+        blackListService.findAll().stream().forEach(x->{
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            Date date = null;
+            try {
+                date = simpleDateFormat.parse(LocalDate.now().toString());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            if(jwtParser.parseSignedClaims(x.getToken()).getPayload().getExpiration().after(date)){
+                blackListService.deleteById(x.getToken());
+            }
+        });
 
     }
 

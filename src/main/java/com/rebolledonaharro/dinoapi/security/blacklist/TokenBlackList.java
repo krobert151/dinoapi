@@ -1,11 +1,14 @@
 package com.rebolledonaharro.dinoapi.security.blacklist;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 
-@RedisHash("token_black_list")
+import java.time.LocalDateTime;
+
+@Table(name = "token_black_list")
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,10 +17,8 @@ import org.springframework.data.redis.core.index.Indexed;
 public class TokenBlackList {
 
     @Id
-    private String id;
-
-    @Indexed
     private String token;
+
 
 
 }

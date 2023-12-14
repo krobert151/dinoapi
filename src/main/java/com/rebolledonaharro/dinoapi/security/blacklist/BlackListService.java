@@ -1,14 +1,12 @@
 package com.rebolledonaharro.dinoapi.security.blacklist;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.rebolledonaharro.dinoapi.security.errorhandling.BlackListTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -16,29 +14,29 @@ public class BlackListService  {
 
     private final BlackListRepository repository;
 
-    public boolean isBlacklisted (String token){
+    public void isBlacklisted (String token) throws BlackListTokenException {
 
-        Iterable<TokenBlackList> iterable = repository.findAll();
-        Iterator<TokenBlackList> iterator = iterable.iterator();
-
-        while (iterator.hasNext()) {
-            TokenBlackList x = iterator.next();
-            if (x.getToken().equals(token)) {
-                return true;
-            }
-        }
-
-        return false;
+        if (repository.findById(token).isPresent())
+            throw  new BlackListTokenException();
 
     }
 
     public void addToBlackList (String token){
 
-        TokenBlackList tokenBlackList = new TokenBlackList(null,token);
+        TokenBlackList tokenBlackList = new TokenBlackList(token);
 
         repository.save(tokenBlackList);
 
     }
+
+    public List<TokenBlackList> findAll(){
+        return repository.findAll();
+    }
+
+    public void deleteById(String token){
+        repository.deleteById(token);
+    }
+
 
 
 
