@@ -20,6 +20,12 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class TokenControllerAdvice  {
 
+    @ExceptionHandler({BlackListTokenException.class})
+    public ResponseEntity<?> handleBlackListTokenException(BlackListTokenException ex, HttpServletRequest request){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorMessage.of(HttpStatus.UNAUTHORIZED,ex.getMessage(),request.getRequestURI()));
+    }
+
     @ExceptionHandler({ AuthenticationException.class })
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
