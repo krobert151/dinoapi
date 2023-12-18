@@ -82,7 +82,7 @@ public class Person implements UserDetails {
 
     @Builder.Default
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime passwordExpirateAt = LocalDateTime.now().plusSeconds(30);
+    private LocalDateTime passwordExpirateAt = LocalDateTime.now().plusMonths(3);
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

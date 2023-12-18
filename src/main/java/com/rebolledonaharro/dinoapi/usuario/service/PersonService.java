@@ -55,12 +55,10 @@ public class PersonService {
         Person person = optionalPerson.get();
 
         if(!passwordEncoder.matches(restorePassword.oldPassword(), person.getPassword())) {
-            System.out.println(person.getPassword());
-            System.out.println(passwordEncoder.encode(restorePassword.oldPassword()));
             throw new EntityNotFoundException("Old password not found ");
         }
 
-        person.setPassword(passwordEncoder.encode(restorePassword.oldPassword()));
+        person.setPassword(passwordEncoder.encode(restorePassword.password()));
 
         person.setEnabled(true);
 

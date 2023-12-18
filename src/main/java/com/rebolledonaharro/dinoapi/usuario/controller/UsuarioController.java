@@ -72,11 +72,32 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(PersonResponse.fromUser(user));
     }
 
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Restore password", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PersonResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                  "id": "c0a83801-8c5f-132e-818c-5f9480320001",
+                                                  "username": "manolo67",
+                                                  "fullName": "Manolo Manolez",
+                                                  "roles": [
+                                                      "ADMIN"
+                                                  ],
+                                                  "createdAt": "12/12/2023 20:50:16"
+                                            }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "400", description = "Restore password", content = @Content)
+    })
+    @Operation(summary = "restorePassword", description = "Register as admin")
     @PostMapping("/restorePassword")
     public ResponseEntity<PersonResponse> restorePassword(@Valid @RequestBody RestorePassword restorePassword) throws UserPrincipalNotFoundException {
 
         Person person = personService.restorePassword(restorePassword);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(PersonResponse.fromUser(person));
 
     }
