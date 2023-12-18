@@ -22,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 @Log
@@ -51,15 +52,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UUID userId = jwtProvider.getUserIdFromJwtToken(token);
 
                     Optional<Person> result = personService.findById(userId);
-
                     if (result.isPresent()) {
-                        Person user = result.get();
+                        Person person = result.get();
+                        if(personService.checkPasswordExpired(person.getId()))
+                            personService.disableExpiratedPassword(person);
+
+                        if(!person.isCredentialsNonExpired())
+                            throw new RuntimeException("La paca to gorda");
 
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
-                                        user,
+                                        person,
                                         null,
-                                        user.getAuthorities()
+                                        person.getAuthorities()
                                 );
 
                         authentication.setDetails(new WebAuthenticationDetails(request));
