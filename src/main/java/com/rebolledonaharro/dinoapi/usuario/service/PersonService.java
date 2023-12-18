@@ -1,11 +1,16 @@
 package com.rebolledonaharro.dinoapi.usuario.service;
 
+import com.rebolledonaharro.dinoapi.usuario.dto.PersonResponse;
+import com.rebolledonaharro.dinoapi.usuario.dto.RestorePassword;
 import com.rebolledonaharro.dinoapi.usuario.model.Person;
 import com.rebolledonaharro.dinoapi.usuario.repository.PersonRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +20,8 @@ import java.util.UUID;
 public class PersonService {
 
     private final PersonRepository repository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public Optional<Person> findByUsername (String username){
         return repository.findFirstByUsername(username);
@@ -38,7 +45,32 @@ public class PersonService {
         repository.save(person);
     }
 
-    public void restorePassword(Person person){
+    public Person restorePassword(RestorePassword restorePassword) throws UserPrincipalNotFoundException {
+
+        Optional<Person> optionalPerson = repository.findFirstByUsername(restorePassword.username());
+
+        if(optionalPerson.isEmpty())
+            throw new UserPrincipalNotFoundException("Username with name "+ restorePassword.username()+" not found");
+
+        Person person = optionalPerson.get();
+
+        if(!passwordEncoder.matches(restorePassword.oldPassword(), person.getPassword())) {
+            System.out.println(person.getPassword());
+            System.out.println(passwordEncoder.encode(restorePassword.oldPassword()));
+            throw new EntityNotFoundException("Old password not found ");
+        }
+
+        person.setPassword(passwordEncoder.encode(restorePassword.oldPassword()));
+
+        person.setEnabled(true);
+
+        person.setCredentialsNonExpired(true);
+
+        person.setLastPasswordChangeAt(LocalDateTime.now());
+
+        person.setPasswordExpirateAt(LocalDateTime.now().plusMonths(3));
+
+        return repository.save(person);
 
     }
     public Optional<Person> findById(UUID userId) {

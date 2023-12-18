@@ -28,6 +28,8 @@ public class AdminService {
         if (repository.existsByUsernameIgnoreCase(createPersonRequest.username()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"El email del usuario ya ha sido registrado");
 
+
+
         Admin admin = Admin.builder()
                 .username(createPersonRequest.username())
                 .email(createPersonRequest.email())

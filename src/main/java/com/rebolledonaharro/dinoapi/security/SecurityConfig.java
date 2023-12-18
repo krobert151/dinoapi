@@ -112,6 +112,7 @@ public class SecurityConfig {
                         antMatcher("/h2-console/**"),
                         antMatcher("/auth/register"),
                         antMatcher("/auth/login"),
+                        antMatcher("/restorePassword"),
                         antMatcher("/api-docs"),
                         antMatcher("/swagger-ui/**"),
                         antMatcher("/swagger-ui-miapi.html"),
