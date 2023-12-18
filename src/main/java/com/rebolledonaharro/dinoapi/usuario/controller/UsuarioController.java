@@ -2,14 +2,12 @@ package com.rebolledonaharro.dinoapi.usuario.controller;
 
 import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.jwt.access.JwtProvider;
-import com.rebolledonaharro.dinoapi.usuario.dto.CreatePersonRequest;
-import com.rebolledonaharro.dinoapi.usuario.dto.JwtUserResponse;
-import com.rebolledonaharro.dinoapi.usuario.dto.LoginRequest;
-import com.rebolledonaharro.dinoapi.usuario.dto.PersonResponse;
+import com.rebolledonaharro.dinoapi.usuario.dto.*;
 import com.rebolledonaharro.dinoapi.usuario.model.Admin;
 import com.rebolledonaharro.dinoapi.usuario.model.Person;
 import com.rebolledonaharro.dinoapi.usuario.model.User;
 import com.rebolledonaharro.dinoapi.usuario.service.AdminService;
+import com.rebolledonaharro.dinoapi.usuario.service.PersonService;
 import com.rebolledonaharro.dinoapi.usuario.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -33,12 +31,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
+
 @RestController
 @RequiredArgsConstructor
 public class UsuarioController {
 
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authManager;
+    private final PersonService personService;
     private final UserService userService;
     private final AdminService adminService;
     private final BlackListService blackListService;
@@ -70,6 +71,37 @@ public class UsuarioController {
         User user = userService.createPersonWithUserRole(createPersonRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(PersonResponse.fromUser(user));
     }
+
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Restore password", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PersonResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                  "id": "c0a83801-8c5f-132e-818c-5f9480320001",
+                                                  "username": "manolo67",
+                                                  "fullName": "Manolo Manolez",
+                                                  "roles": [
+                                                      "ADMIN"
+                                                  ],
+                                                  "createdAt": "12/12/2023 20:50:16"
+                                            }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "400", description = "Restore password", content = @Content)
+    })
+    @Operation(summary = "restorePassword", description = "Register as admin")
+    @PostMapping("/restorePassword")
+    public ResponseEntity<PersonResponse> restorePassword(@Valid @RequestBody RestorePassword restorePassword) throws UserPrincipalNotFoundException {
+
+        Person person = personService.restorePassword(restorePassword);
+        return ResponseEntity.status(HttpStatus.CREATED).body(PersonResponse.fromUser(person));
+
+    }
+
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Register as admin", content = {
@@ -129,9 +161,11 @@ public class UsuarioController {
                                 loginRequest.getPassword()
                         )
                 );
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
         Person person = (Person) authentication.getPrincipal();
+        System.out.println(person.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(JwtUserResponse.of(person, token));
     }

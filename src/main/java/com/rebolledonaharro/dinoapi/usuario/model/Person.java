@@ -1,6 +1,7 @@
 package com.rebolledonaharro.dinoapi.usuario.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Person implements UserDetails {
@@ -75,7 +77,12 @@ public class Person implements UserDetails {
     private LocalDateTime createdAt;
 
     @Builder.Default
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
+
+    @Builder.Default
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime passwordExpirateAt = LocalDateTime.now().plusMonths(3);
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

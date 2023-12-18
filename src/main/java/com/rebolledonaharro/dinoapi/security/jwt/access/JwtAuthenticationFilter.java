@@ -3,6 +3,7 @@ package com.rebolledonaharro.dinoapi.security.jwt.access;
 import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.errorhandling.BlackListTokenException;
 import com.rebolledonaharro.dinoapi.security.errorhandling.JwtTokenException;
+import com.rebolledonaharro.dinoapi.security.errorhandling.PasswordExpired;
 import com.rebolledonaharro.dinoapi.usuario.model.Person;
 import com.rebolledonaharro.dinoapi.usuario.service.PersonService;
 import jakarta.servlet.FilterChain;
@@ -22,6 +23,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 @Log
@@ -51,15 +54,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UUID userId = jwtProvider.getUserIdFromJwtToken(token);
 
                     Optional<Person> result = personService.findById(userId);
-
                     if (result.isPresent()) {
-                        Person user = result.get();
+                        Person person = result.get();
+                        if(personService.checkPasswordExpired(person.getId()))
+                            personService.disableExpiratedPassword(person);
+
+                        if(!person.isCredentialsNonExpired())
+                            throw new PasswordExpired("Su contraseña ha expirado");
 
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
-                                        user,
+                                        person,
                                         null,
-                                        user.getAuthorities()
+                                        person.getAuthorities()
                                 );
 
                         authentication.setDetails(new WebAuthenticationDetails(request));
@@ -71,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request, response);
 
-        } catch (JwtTokenException | BlackListTokenException ex) {
+        } catch (JwtTokenException | BlackListTokenException | PasswordExpired ex) {
             log.info("Authentication error using token JWT: " + ex.getMessage());
             resolver.resolveException(request, response, null, ex);
         }
