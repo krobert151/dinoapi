@@ -2,6 +2,8 @@ package com.rebolledonaharro.dinoapi.usuario.controller;
 
 import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.jwt.access.JwtProvider;
+import com.rebolledonaharro.dinoapi.security.jwt.refresh.RefreshToken;
+import com.rebolledonaharro.dinoapi.security.jwt.refresh.RefreshTokenService;
 import com.rebolledonaharro.dinoapi.usuario.dto.*;
 import com.rebolledonaharro.dinoapi.usuario.model.Admin;
 import com.rebolledonaharro.dinoapi.usuario.model.Person;
@@ -43,6 +45,7 @@ public class UsuarioController {
     private final UserService userService;
     private final AdminService adminService;
     private final BlackListService blackListService;
+    private final RefreshTokenService refreshTokenService;
 
 
     @ApiResponses(value = {
@@ -165,9 +168,12 @@ public class UsuarioController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
         Person person = (Person) authentication.getPrincipal();
-        System.out.println(person.getPassword());
+
+        refreshTokenService.deleteByPerson(person);
+        RefreshToken refreshToken = refreshTokenService.createRefresjToken(person);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(JwtUserResponse.of(person, token));
+                .body(JwtUserResponse.of(person, token, refreshToken.getToken()));
     }
 
     @PostMapping("/userLogout")

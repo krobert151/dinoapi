@@ -27,6 +27,14 @@ public class PersonService {
         return repository.findFirstByUsername(username);
     }
 
+    public Person findByUuid(UUID uuid){
+        return repository.findFristById(uuid);
+    }
+
+    public Person save(Person person){
+        return  repository.save(person);
+    }
+
     public boolean checkPasswordExpired(UUID uuid){
         Person person = repository.findFristById(uuid);
 
