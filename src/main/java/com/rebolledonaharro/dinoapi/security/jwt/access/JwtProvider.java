@@ -1,16 +1,14 @@
 package com.rebolledonaharro.dinoapi.security.jwt.access;
 
-import com.rebolledonaharro.dinoapi.security.blacklist.BlackListRepository;
 import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.errorhandling.BlackListTokenException;
 import com.rebolledonaharro.dinoapi.security.errorhandling.JwtTokenException;
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
+import com.rebolledonaharro.dinoapi.person.model.Person;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.*;

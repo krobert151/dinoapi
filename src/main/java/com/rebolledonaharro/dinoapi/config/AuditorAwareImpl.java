@@ -1,6 +1,6 @@
 package com.rebolledonaharro.dinoapi.config;
 
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
+import com.rebolledonaharro.dinoapi.person.model.Person;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
