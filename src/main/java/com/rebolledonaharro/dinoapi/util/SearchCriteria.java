@@ -1,4 +1,4 @@
-package com.rebolledonaharro.dinoapi.criteria;
+package com.rebolledonaharro.dinoapi.util;
 
 
 public record SearchCriteria(
