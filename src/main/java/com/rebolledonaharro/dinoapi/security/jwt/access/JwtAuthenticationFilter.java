@@ -1,11 +1,10 @@
 package com.rebolledonaharro.dinoapi.security.jwt.access;
 
-import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.errorhandling.BlackListTokenException;
 import com.rebolledonaharro.dinoapi.security.errorhandling.JwtTokenException;
 import com.rebolledonaharro.dinoapi.security.errorhandling.PasswordExpired;
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
-import com.rebolledonaharro.dinoapi.usuario.service.PersonService;
+import com.rebolledonaharro.dinoapi.person.model.Person;
+import com.rebolledonaharro.dinoapi.person.service.PersonService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 @Log

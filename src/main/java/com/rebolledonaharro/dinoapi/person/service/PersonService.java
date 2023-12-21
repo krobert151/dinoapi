@@ -1,15 +1,13 @@
-package com.rebolledonaharro.dinoapi.usuario.service;
+package com.rebolledonaharro.dinoapi.person.service;
 
-import com.rebolledonaharro.dinoapi.usuario.dto.PersonResponse;
-import com.rebolledonaharro.dinoapi.usuario.dto.RestorePassword;
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
-import com.rebolledonaharro.dinoapi.usuario.repository.PersonRepository;
+import com.rebolledonaharro.dinoapi.person.dto.RestorePassword;
+import com.rebolledonaharro.dinoapi.person.model.Person;
+import com.rebolledonaharro.dinoapi.person.repository.PersonRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;

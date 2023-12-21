@@ -1,8 +1,8 @@
-package com.rebolledonaharro.dinoapi.usuario.dto;
+package com.rebolledonaharro.dinoapi.person.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
+import com.rebolledonaharro.dinoapi.person.model.Person;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

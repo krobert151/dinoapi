@@ -1,4 +1,4 @@
-package com.rebolledonaharro.dinoapi.usuario.model;
+package com.rebolledonaharro.dinoapi.person.model;
 
 import jakarta.persistence.Entity;
 import lombok.*;

@@ -1,12 +1,11 @@
-package com.rebolledonaharro.dinoapi.usuario.service;
+package com.rebolledonaharro.dinoapi.person.service;
 
-import com.rebolledonaharro.dinoapi.usuario.dto.CreatePersonRequest;
-import com.rebolledonaharro.dinoapi.usuario.error.NoAdmin;
-import com.rebolledonaharro.dinoapi.usuario.model.Admin;
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
-import com.rebolledonaharro.dinoapi.usuario.model.PersonRole;
-import com.rebolledonaharro.dinoapi.usuario.model.User;
-import com.rebolledonaharro.dinoapi.usuario.repository.AdminRepository;
+import com.rebolledonaharro.dinoapi.person.dto.CreatePersonRequest;
+import com.rebolledonaharro.dinoapi.person.error.NonAdminException;
+import com.rebolledonaharro.dinoapi.person.model.Admin;
+import com.rebolledonaharro.dinoapi.person.model.Person;
+import com.rebolledonaharro.dinoapi.person.model.PersonRole;
+import com.rebolledonaharro.dinoapi.person.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,7 +45,7 @@ public class AdminService {
     public Admin createPersonWithAdminRole(CreatePersonRequest createPersonRequest, Person person){
 
         if(!person.getRoles().contains(PersonRole.ADMIN)){
-            throw new NoAdmin(person.getName()+" is not an administrator");
+            throw new NonAdminException(person.getName()+" is not an administrator");
         }
 
         return createUser(createPersonRequest,EnumSet.of(PersonRole.ADMIN));

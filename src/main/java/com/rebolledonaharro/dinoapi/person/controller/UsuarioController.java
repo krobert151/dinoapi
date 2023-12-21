@@ -1,14 +1,14 @@
-package com.rebolledonaharro.dinoapi.usuario.controller;
+package com.rebolledonaharro.dinoapi.person.controller;
 
 import com.rebolledonaharro.dinoapi.security.blacklist.BlackListService;
 import com.rebolledonaharro.dinoapi.security.jwt.access.JwtProvider;
-import com.rebolledonaharro.dinoapi.usuario.dto.*;
-import com.rebolledonaharro.dinoapi.usuario.model.Admin;
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
-import com.rebolledonaharro.dinoapi.usuario.model.User;
-import com.rebolledonaharro.dinoapi.usuario.service.AdminService;
-import com.rebolledonaharro.dinoapi.usuario.service.PersonService;
-import com.rebolledonaharro.dinoapi.usuario.service.UserService;
+import com.rebolledonaharro.dinoapi.person.dto.*;
+import com.rebolledonaharro.dinoapi.person.model.Admin;
+import com.rebolledonaharro.dinoapi.person.model.Person;
+import com.rebolledonaharro.dinoapi.person.model.User;
+import com.rebolledonaharro.dinoapi.person.service.AdminService;
+import com.rebolledonaharro.dinoapi.person.service.PersonService;
+import com.rebolledonaharro.dinoapi.person.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

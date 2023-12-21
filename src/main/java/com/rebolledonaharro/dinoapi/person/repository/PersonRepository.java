@@ -1,6 +1,6 @@
-package com.rebolledonaharro.dinoapi.usuario.repository;
+package com.rebolledonaharro.dinoapi.person.repository;
 
-import com.rebolledonaharro.dinoapi.usuario.model.Person;
+import com.rebolledonaharro.dinoapi.person.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

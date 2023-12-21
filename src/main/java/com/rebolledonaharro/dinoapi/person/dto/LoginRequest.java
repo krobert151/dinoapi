@@ -1,4 +1,4 @@
-package com.rebolledonaharro.dinoapi.usuario.dto;
+package com.rebolledonaharro.dinoapi.person.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,5 +1,6 @@
 package com.rebolledonaharro.dinoapi.dino.service;
 
+import com.rebolledonaharro.dinoapi.dino.error.DinosaurNotFoundException;
 import com.rebolledonaharro.dinoapi.dino.model.Dinosaur;
 import com.rebolledonaharro.dinoapi.dino.repository.DinosaurRepository;
 import com.rebolledonaharro.dinoapi.dino.specification.DinosaurSpecificationBuilder;
@@ -26,14 +27,13 @@ public class DinosaurService {
         List<Dinosaur> list = repository.findAll();
 
         if(list.isEmpty())
-            throw new RuntimeException();
+            throw new DinosaurNotFoundException();
 
         return list;
 
     }
 
     public List<Dinosaur> findAllSpec (String search){
-        log.info(search);
         List<SearchCriteria> params = new ArrayList<SearchCriteria>();
         Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
@@ -41,7 +41,12 @@ public class DinosaurService {
             params.add(new SearchCriteria(matcher.group(1), matcher.group(2),matcher.group(3)));
         }
 
-        return search(params);
+        List<Dinosaur> list= search(params);
+
+        if(list.isEmpty())
+            throw new DinosaurNotFoundException("Can´t find a dinosaur with those specifications "+ params.toString());
+
+        return list;
 
     }
 

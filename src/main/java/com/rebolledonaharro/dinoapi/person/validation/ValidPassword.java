@@ -1,4 +1,4 @@
-package com.rebolledonaharro.dinoapi.usuario.validation;
+package com.rebolledonaharro.dinoapi.person.validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -6,7 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.rebolledonaharro.dinoapi.usuario.dto.CreatePersonRequest;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

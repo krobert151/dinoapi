@@ -1,6 +1,6 @@
-package com.rebolledonaharro.dinoapi.usuario.validation;
+package com.rebolledonaharro.dinoapi.person.validation;
 
-import com.rebolledonaharro.dinoapi.usuario.dto.CreatePersonRequest;
+import com.rebolledonaharro.dinoapi.person.dto.CreatePersonRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

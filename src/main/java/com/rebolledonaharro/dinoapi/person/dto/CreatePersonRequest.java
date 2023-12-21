@@ -1,12 +1,8 @@
-package com.rebolledonaharro.dinoapi.usuario.dto;
+package com.rebolledonaharro.dinoapi.person.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rebolledonaharro.dinoapi.usuario.validation.ValidPassword;
-import jakarta.validation.Valid;
+import com.rebolledonaharro.dinoapi.person.validation.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDate;
 
 @ValidPassword
 public record CreatePersonRequest(

@@ -1,9 +1,9 @@
-package com.rebolledonaharro.dinoapi.usuario.service;
+package com.rebolledonaharro.dinoapi.person.service;
 
-import com.rebolledonaharro.dinoapi.usuario.dto.CreatePersonRequest;
-import com.rebolledonaharro.dinoapi.usuario.model.PersonRole;
-import com.rebolledonaharro.dinoapi.usuario.model.User;
-import com.rebolledonaharro.dinoapi.usuario.repository.UserRepository;
+import com.rebolledonaharro.dinoapi.person.dto.CreatePersonRequest;
+import com.rebolledonaharro.dinoapi.person.model.PersonRole;
+import com.rebolledonaharro.dinoapi.person.model.User;
+import com.rebolledonaharro.dinoapi.person.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;

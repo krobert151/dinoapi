@@ -1,4 +1,4 @@
-package com.rebolledonaharro.dinoapi.usuario.service;
+package com.rebolledonaharro.dinoapi.person.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
