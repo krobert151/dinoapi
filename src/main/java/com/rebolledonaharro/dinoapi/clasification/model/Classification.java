@@ -1,14 +1,10 @@
 package com.rebolledonaharro.dinoapi.clasification.model;
 
-import com.rebolledonaharro.dinoapi.dino.model.Dinosaur;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +13,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Clasification {
+public class Classification {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -44,7 +40,7 @@ public class Clasification {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "clasification_id")
-    private Clasification clasification;
+    @JoinColumn(name = "classification_id")
+    private Classification classification;
 
 }
