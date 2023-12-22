@@ -1,13 +1,14 @@
 package com.rebolledonaharro.dinoapi.dino.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.rebolledonaharro.dinoapi.clasification.model.Classification;
+import com.rebolledonaharro.dinoapi.period.model.Period;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -38,7 +39,6 @@ public class Dinosaur {
 
     private String name;
 
-    //new Class of Gender
 
     private float height;
 
@@ -46,7 +46,9 @@ public class Dinosaur {
 
     private float length;
 
-    //associate period (from to millions ago)
+    private double liveSince;
+
+    private double liveUntil;
 
     //associate articles
 
@@ -56,7 +58,16 @@ public class Dinosaur {
 
     private int numTheeth;
 
-    //associate pray
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "clasification_id", nullable = false)
+    private Classification classification;
+
+    @OneToMany
+    private Set<Period> periods = new LinkedHashSet<>();
+
+//associate prey
+
+    //associate predators
 
     //associate zones
 
