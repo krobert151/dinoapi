@@ -1,20 +1,23 @@
-package com.rebolledonaharro.dinoapi.dino.model;
+package com.rebolledonaharro.dinoapi.clasification.model;
 
-import com.rebolledonaharro.dinoapi.clasification.model.Clasification;
+import com.rebolledonaharro.dinoapi.dino.model.Dinosaur;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
-public class Dinosaur {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Clasification {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -31,37 +34,17 @@ public class Dinosaur {
     @Column(columnDefinition = "uuid")
     private UUID id;
 
-    @Column(unique = true)
-    private String cientificName;
+    private ClasificationType type;
 
     private String name;
 
+    private double schemaOrder;
 
-    private float height;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    private float weight;
-
-    private float length;
-
-    //associate period (from to millions ago)
-
-    //associate articles
-
-    //associate paleontologist
-
-    //associate films, movies and cartoons
-
-    private int numTheeth;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "clasification_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "clasification_id")
     private Clasification clasification;
-
-    //associate prey
-
-    //associate predators
-
-    //associate zones
-
 
 }
