@@ -16,10 +16,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString(onlyExplicitlyIncluded = true)
 public class Period {
 
+    @ToString.Include
     @Id
-    @GeneratedValue(generator = "UUID")
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO, generator = "UUID")
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator",
@@ -30,16 +32,22 @@ public class Period {
                     )
             }
     )
-    @Column(columnDefinition = "uuid")
+    @Column(nullable = false, columnDefinition = "uuid")
     private UUID id;
 
+    @ToString.Include
     private String name;
 
+    @ToString.Include
+    @Column(nullable = false)
     private double started;
 
+    @ToString.Include
+    @Column(nullable = false)
     private double finished;
 
 
+    @ToString.Include
     @Column(columnDefinition = "TEXT")
     private String description;
 

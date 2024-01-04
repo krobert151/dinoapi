@@ -24,6 +24,6 @@ insert into classification (id, type, schema_order, name, description, classific
 
 insert into period (id, name, started, finished, description) values ( '4cb26b28-38c0-45e5-a4de-ce5a97931469','Late Cretaceous', 100.5, 65,'The Late Cretaceous (100.5–66 Ma) is the younger of two epochs into which the Cretaceous Period is divided in the geologic time scale. Rock strata from this epoch form the Upper Cretaceous Series. The Cretaceous is named after creta, the Latin word for the white limestone known as chalk. The chalk of northern France and the white cliffs of south-eastern England date from the Cretaceous Period.')
 
-insert into dinosaur (id, cientific_name, name, height, length, live_since, live_until, num_theeth, weight, clasification_id) values ('80d768ef-831a-4cfe-94e6-fda1eb4452a3', 'tiranosaurus-rex', 'tiranosaurus', 5, 12, 68, 66, 100, 6000, 'd1638980-6a3e-47ba-8c68-ec059ca560f1');
+insert into dinosaur (id, scientific_name, name, height, length, live_since, live_until, num_theeth, weight, clasification_id) values ('80d768ef-831a-4cfe-94e6-fda1eb4452a3', 'tiranosaurus-rex', 'tiranosaurus', 5, 12, 68, 66, 100, 6000, 'd1638980-6a3e-47ba-8c68-ec059ca560f1');
 
 insert into dinosaur_periods (dinosaur_id, periods_id) values ('80d768ef-831a-4cfe-94e6-fda1eb4452a3','4cb26b28-38c0-45e5-a4de-ce5a97931469');
