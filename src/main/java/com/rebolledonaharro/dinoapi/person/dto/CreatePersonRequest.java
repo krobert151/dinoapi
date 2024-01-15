@@ -3,8 +3,10 @@ package com.rebolledonaharro.dinoapi.person.dto;
 import com.rebolledonaharro.dinoapi.person.validation.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 @ValidPassword
+@Builder
 public record CreatePersonRequest(
 
         @NotNull(message = "username can`t be null")

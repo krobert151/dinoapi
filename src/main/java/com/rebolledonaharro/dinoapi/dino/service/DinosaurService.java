@@ -65,6 +65,10 @@ public class DinosaurService {
 
     }
 
+    public Dinosaur addDino2 (Dinosaur dinosaur){
+        return repository.save(dinosaur);
+    }
+
     public DinoBasicGET addDino(DinoPOST post){
 
         Dinosaur dinosaur = Dinosaur.builder()
