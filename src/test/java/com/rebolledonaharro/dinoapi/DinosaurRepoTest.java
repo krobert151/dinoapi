@@ -10,18 +10,23 @@ import com.rebolledonaharro.dinoapi.period.repository.PeriodRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
-
 @DataJpaTest
+@Testcontainers
+@ActiveProfiles({"test"})
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = "classpath:import-test.sql",executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 public class DinosaurRepoTest {
 
     @Autowired
@@ -77,7 +82,12 @@ public class DinosaurRepoTest {
 
 
         Assertions.assertEquals(2,listResp.size());
-        Assertions.assertFalse(listResp.get(0).getPeriods().stream().filter(x -> x.getName().equalsIgnoreCase("Late Cretaceous")).collect(Collectors.toSet()).isEmpty());
+        Assertions.assertFalse(listResp.get(0).getPeriods()
+                .stream()
+                .filter(
+                        x -> x.getName()
+                                .equalsIgnoreCase("Late Cretaceous")
+                ).collect(Collectors.toSet()).isEmpty());
 
     }
 
